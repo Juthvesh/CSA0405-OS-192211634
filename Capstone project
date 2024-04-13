@@ -1,0 +1,35 @@
+class VirtualMemory:
+    def __init__(self, size):
+        self.size = size
+        self.memory = {}
+        self.disk = {}
+
+    def read(self, address):
+        if address in self.memory:
+            return self.memory[address]
+        elif address in self.disk:
+            # Simulating disk read delay
+            print("Reading from disk...")
+            self.memory[address] = self.disk[address]
+            return self.memory[address]
+        else:
+            print("Address not found!")
+            return None
+
+    def write(self, address, data):
+        if address < self.size:
+            self.memory[address] = data
+        else:
+            print("Out of memory! Writing to disk...")
+            self.disk[address] = data
+
+# Create virtual memory with a size of 10 addresses
+vm = VirtualMemory(10)
+
+# Write data to virtual memory
+vm.write(5, "Data5")
+vm.write(15, "Data15")  # This will be written to disk
+
+# Read data from virtual memory
+print(vm.read(5))   # Output: Data5
+print(vm.read(15))  # Output: Reading from disk... Data15
